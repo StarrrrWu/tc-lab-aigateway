@@ -74,17 +74,25 @@ async function sendMessage() {
     // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    // Send request to API
+    // Send request to API    
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        messages: chatHistory,
-      }),
-    });
-
+        messages: [
+         {
+           role: "assistant",
+           content: "You are a helpful, friendly assistant. Provide concise and accurate responses.",
+         },
+         {
+           role: "user",
+           content: message,
+         },
+      ],
+   }),
+ });
     // Handle errors
     if (!response.ok) {
       throw new Error("Failed to get response");
@@ -130,7 +138,7 @@ async function sendMessage() {
     console.error("Error:", error);
     addMessageToChat(
       "assistant",
-      "Sorry, there was an error processing your request.",
+      "<br>Sorry 您問題內容有不當文字，請重新發問。",
     );
   } finally {
     // Hide typing indicator
